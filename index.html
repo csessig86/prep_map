@@ -1,0 +1,226 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>WCFCourier.com - Prep teams in the semifinals</title>
+<style type="text/css">
+body { font-family: Arial, sans-serif; }
+#map_canvas {
+    height: 560px;
+	width: 570px;
+    border: solid grey 1px;
+}
+#legend {
+	width: 380px;
+	height: 200px;
+	font-family: arial, sans-serif;
+}
+
+#legend h3 {font-size:15px; background: url("http://ajax.googleapis.com/ajax/static/modules/gviz/1.0/table/title-bg.gif") repeat-x scroll left bottom #FFFFFF; padding: 6px; text-align: center;}
+#legend p {font-size:13px;}
+
+#legend .colors {font-size:13px;}
+#legend .colors span {height:20px; width:20px; display:block; float:left; clear:left; margin-right:5px;}
+#legend .foura {background-color: #5588ff;}
+#legend .threea {background-color: #ff9900;}
+#legend .twoa {background-color: #55dddd;}
+#legend .onea {background-color: #00ee33;}
+#legend .classa {background-color: #ff6655;}
+#legend .eight {background-color: #ffff55;}
+
+#chart {
+	width: 380px;
+	height: 300px;
+}
+
+#visualization_div {
+	width: 950px;
+}
+.text {
+	font-size:13px;
+	font-family: arial, sans-serif;
+}
+.blue_text {
+	border-bottom: 2px solid #333333;
+	color: #3676AF;
+	font-family: arial,helvetica,sans-serif;
+	font-size: 28px;
+	line-height: 32px;
+	margin-bottom: 10px;
+	padding-top: 10px;
+	vertical-align: baseline;
+	margin: 0;
+    outline: 0 none;
+    padding: 0;
+}
+</style>
+</head>
+
+<body onload="initialize();">
+<script type='text/javascript' src='http://stats.townnews.com/shared-content/stats/common/tracker.js'></script>
+<script type='text/javascript'>
+<!--
+ if (typeof(TNStats_Tracker) !== 'undefined' && typeof(TNTracker) === 'undefined') { TNTracker = new TNStats_Tracker('wcfcourier.com'); TNTracker.setTrackerDomain('stats.townnews.com'); TNTracker.trackPageView(); }
+// -->
+</script>
+<div class="blue_text">
+Road to the Dome: A look at the prep teams in the semifinals
+</div>
+<table>
+	<tr>
+    	<td width="750px"></td>
+        <td width="100px"><a href="https://twitter.com/share" class="twitter-share-button">Tweet</a></td>
+    	<td width="100px">
+        <div id="fb-root"></div>
+		<script>(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) {return;}
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=148866255208434";
+		fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+        
+        <div class="fb-like" data-href="http://wcfcourier.com/sports/high-school/playoffs2011/" data-send="false" data-layout="button_count" data-width="100" data-show-faces="false"></div>
+        </td>
+    </tr>
+</table>
+
+<table>
+<tr>
+  <td rowspan="2"><div id="map_canvas"></div></td>
+  <td>
+  <div id="legend">
+  <h3>Teams vying for a football championship</h3>
+  <p class="text">Four teams from each of the state's six divisions made it to the semifinals, which are being played in The Dome. Those 24 teams are color-coded on the map based on their league. Select a pointer on the map for more information on the team.</p>
+  
+  <table width="380px">
+  <tr>
+  <td width="190px">
+  	<div class="colors">
+    	<span class="foura"></span>Class 4A<br/>
+        <span class="threea"></span>Class 3A<br/>
+        <span class="twoa"></span>Class 2A
+    </div>
+  </div>
+  </td>
+  <td width="190px">
+  	<div class="colors">
+    	<span class="onea"></span>Class 1A<br/>
+        <span class="classa"></span>Class A<br/>
+        <span class="eight"></span>Eight-Player
+    </div>
+  </div>
+  </td>
+  </tr>
+  </table>
+  
+  </td>
+</tr>
+
+<tr>
+  <td><div id="chart"></div></td>
+</tr>
+</table>
+
+<br />
+
+<table width="950px">
+<tr>
+<td>
+<div class="blue_text">Three wins and you're in</div>
+<p class="text">To make it to the semifinal round, each team had to win three playoff games against teams in their class. The first round took place on October 26. Teams must now win in the semifinal round before making to the finals, which will be played on November 18 and 19. To see each teams' road to the semifinal round, select a class from the list below:</p>
+<strong>Road to The Dome:</strong> <select id="selections" onchange="changeData(this.value);">
+  <option value="Null">Select a Class</option>
+  <option value="4A">4A</option>
+  <option value="3A">3A</option>
+  <option value="2A">2A</option>
+  <option value="1A">1A</option>
+  <option value="A">A</option>
+  <option value="8-Player">8-Player</option>
+</select>
+
+<br />
+
+<div id="visualization"></div>
+</div>
+</td>
+</td>
+</table>
+
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+<script type="text/javascript" id="script">
+google.load('visualization', '1', {'packages':['table']});
+
+function initialize() {  
+  var map = new google.maps.Map(document.getElementById('map_canvas'), {
+    center: new google.maps.LatLng(42.3, -453.4),
+	zoom: 7,
+	minZoom: 5,
+	maxZoom: 11,
+	mapTypeControl: false,
+  	streetViewControl: false,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  });
+  
+  var layer = new google.maps.FusionTablesLayer({
+    query: {
+      select: 'mappable_address',
+      from: 2102557
+    },
+    suppressInfoWindows: true
+  });
+  layer.setMap(map);
+
+  // Add a listener to the layer that constructs a chart from
+  // the data returned on click
+  google.maps.event.addListener(layer, 'click', function(e) {
+
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'About:');
+    data.addColumn('string', e.row['School'].value);
+    data.addRows([
+	  ['Class', e.row['Class'].value],
+      ['Mascot', e.row['Mascot'].value],
+      ['Address', e.row['Address'].value],
+	  ['League', e.row['League'].value],
+	  ['League Record', e.row['League Record'].value],
+      ['Regular Season Record', e.row['Season Record'].value],
+      ['Playoffs - Round 1', e.row['Round 1'].value],
+      ['Playoffs - Round 2', e.row['Round 2'].value],
+      ['Quarterfinals', e.row['Q-Finals'].value],
+	  ['Semifinals', e.row['Semifinals'].value],
+	  ['Finals', e.row['Finals'].value]
+    ]);
+
+    var chart = new google.visualization.Table(document.getElementById('chart'));
+	var options = {
+      'title': e.row['School'].value + ' ',
+    };
+    chart.draw(data, options);
+  });
+}
+
+function changeData(team) {
+  var whereClause = "";
+  if(team) {
+    whereClause =  " WHERE 'Class' = '" + team + "'";
+  }
+  var queryText = encodeURIComponent("SELECT 'School', 'Round 1', 'Round 2', 'Q-Finals', 'Semifinals', 'Finals' FROM 	2102557" + whereClause);
+  var query = new google.visualization.Query('http://www.google.com/fusiontables/gvizdata?tq='  + queryText);
+  
+  query.send(getData);
+}
+
+function getData(response) {
+  var table = new google.visualization.Table(document.getElementById('visualization'));
+  table.draw(response.getDataTable());
+}
+
+</script>
+
+</body>
+</html>
